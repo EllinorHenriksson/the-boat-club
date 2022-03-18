@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Represents a boat club.
  */
-public class BoatClub {
+public class Registry {
   ArrayList<Member> members = new ArrayList<>();
 
   /**

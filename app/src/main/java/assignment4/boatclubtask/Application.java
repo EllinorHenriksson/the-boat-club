@@ -13,7 +13,7 @@ import java.util.Scanner;
  */
 public class Application {
   private File file;
-  private BoatClub boatClub = new BoatClub();
+  private Registry registry = new Registry();
 
   /**
    * Initializing constructor.
@@ -30,7 +30,7 @@ public class Application {
   public void run() {
     String textFromFile = readFile().toString();
     populateRegistry(textFromFile);
-    String textToFile = registryToText(boatClub.getMembers());
+    String textToFile = registryToText(registry.getMembers());
     writeFile(textToFile);
   }
 
@@ -74,7 +74,7 @@ public class Application {
         newMember.addBoat(newBoat);
       }
 
-      boatClub.addMember(newMember);
+      registry.addMember(newMember);
     }
   }
 
@@ -124,6 +124,12 @@ public class Application {
     return newBoat;
   }
 
+  /**
+   * Transfoms the member registry to a formatted text.
+   *
+   * @param members The members in the registry.
+   * @return A formatted text.
+   */
   private String registryToText(ArrayList<Member> members) {
     StringBuilder text = new StringBuilder();
     for (int i = 0; i < members.size(); i++) {

@@ -19,7 +19,13 @@ public class BoatClub {
     for (int i = 0; i < members.size(); i++) {
       Member member = members.get(i);
       // ...create a copy of the member and add to the member list copy.
-      copy.add(new Member(member.getName(), member.getEmail(), member.getId()));
+      String email = member.getEmail();
+
+      if (email == null) {
+        copy.add(new Member(member.getName(), member.getId()));
+      } else {
+        copy.add(new Member(member.getName(), member.getEmail(), member.getId()));
+      }
 
       // For each boat (copy) of the member...
       for (Boat boat : member.getBoats()) {

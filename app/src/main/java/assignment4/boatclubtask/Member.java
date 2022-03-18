@@ -9,7 +9,7 @@ public class Member {
   String name;
   String email = null;
   String id;
-  ArrayList<Boat> boats;
+  ArrayList<Boat> boats = new ArrayList<>();
 
   /**
    * Initializing constructor.

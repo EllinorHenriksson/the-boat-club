@@ -3,10 +3,10 @@ package assignment4.boatclubtask;
 import java.io.File;
 import java.io.PrintWriter;
 import java.lang.StringBuilder;
-import java.security.AllPermission;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.UUID;
 
 /**
  * Represents an application for assignment 4 - The Boat Club.
@@ -14,6 +14,7 @@ import java.util.Scanner;
 public class Application {
   private File file;
   private Registry registry = new Registry();
+  private Console console = new Console();
 
   /**
    * Initializing constructor.
@@ -30,8 +31,80 @@ public class Application {
   public void run() {
     String textFromFile = readFile().toString();
     populateRegistry(textFromFile);
-    String textToFile = registryToText(registry.getMembers());
-    writeFile(textToFile);
+
+    String choiceMainMeny = console.mainMeny(); 
+    // If "Create member"...
+    if (choiceMainMeny.equals("1")) {
+      String[] data = console.newMember();
+      String id = null;
+      Boolean unique = false;
+      while (!unique) {
+        id = generateId();
+        unique = isUnique(id);
+      }
+      data[2] = id;
+      createMember(data);
+      // Exit to main meny
+    }
+
+    // If "List all members"...
+    if (choiceMainMeny.equals("2")) {
+      String choiceMemberList = console.memberList();
+      // If "Exit to main meny"...
+      if (choiceMemberList.equals("1")) {
+        // Exit to main meny
+      }
+    }
+
+    // If "Select member"...
+    if (choiceMainMeny.equals("3")) {
+      String choiceMemberInfo = console.memberInfo(); 
+      // If "Edit member"...
+      if (choiceMemberInfo.equals("1")) {
+        // Edit member
+      }
+      // If "Delete member"...
+      if (choiceMemberInfo.equals("2")) {
+        // Delete member
+      }
+      // If "Add boat"...
+      if (choiceMemberInfo.equals("3")) {
+        // Add boat
+      }
+      // If "Select boat"...
+      if (choiceMemberInfo.equals("4")) {
+        String choiceBoatInfo = console.boatInfo();
+        // If "Edit boat"...
+        if (choiceBoatInfo.equals("1")) {
+          // Edit boat
+        }
+        // If "Deletet boat"...
+        if (choiceBoatInfo.equals("2")) {
+          // Delete boat
+        }
+        // If "Exit to main meny"...
+        if (choiceBoatInfo.equals("3")) {
+          // Exit to main meny
+        }
+      }
+      // If "Exit to main meny"...
+      if (choiceMemberInfo.equals("5")) {
+        // Exit to main meny
+      }
+    }
+
+    // If "Search"...
+    if (choiceMainMeny.equals("4")) {
+      // Search for members
+    }
+
+    // If "Quit application"...
+    if (choiceMainMeny.equals("5")) {
+      // Quit application
+      String textToFile = registryToText(registry.getMembers());
+      writeFile(textToFile);
+      // Exit application
+    }
   }
 
   /**
@@ -77,6 +150,33 @@ public class Application {
       registry.addMember(newMember);
     }
   }
+
+  /**
+   * Generates a random alphanumeric id of 6 characters.
+   *
+   * @return The id.
+   */
+  private String generateId() {
+    UUID uuid = UUID.randomUUID();
+    return uuid.toString().replaceAll("-", "").substring(0, 6);
+  }
+
+  /**
+   * Checks if the id is unique among the members.
+   *
+   * @param id The id.
+   * @return True if unique, else false.
+   */
+  private Boolean isUnique(String id) {
+    ArrayList<Member> members = registry.getMembers();
+    for (Member member : members) {
+      if (member.getId().equals(id)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
 
   /**
    * Creates a new member with the provided personal data.

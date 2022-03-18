@@ -39,4 +39,14 @@ public class Motorboat extends Boat {
       throw new IllegalArgumentException("The horse power of the boat must be greater than 0.");
     }
   }
+
+  /**
+   * Returns a string representation of the motorboat.
+   *
+   * @return A string.
+   */
+  @Override
+  public String toString() {
+    return "BOAT:" + this.getName() + ":" + "motorboat" + ":" + this.getLength() + ":" + this.getPower();
+  }
 }

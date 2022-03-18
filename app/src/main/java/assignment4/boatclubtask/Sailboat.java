@@ -39,4 +39,14 @@ public class Sailboat extends Boat {
       throw new IllegalArgumentException("The depth of the boat must be greater than 0.");
     }
   }
+
+  /**
+   * Returns a string representation of the sailboat.
+   *
+   * @return A string.
+   */
+  @Override
+  public String toString() {
+    return "BOAT:" + this.getName() + ":" + "sailboat" + ":" + this.getLength() + ":" + this.getDepth();
+  }
 }

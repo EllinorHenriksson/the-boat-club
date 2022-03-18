@@ -3,7 +3,7 @@ package assignment4.boatclubtask;
 /**
  * Represents a boat.
  */
-public class Boat {
+public abstract class Boat {
   private String name;
   private int length;
 
@@ -61,4 +61,6 @@ public class Boat {
       throw new IllegalArgumentException("The length of the boat must be greater than 0.");
     }
   }
+
+  public abstract String toString();
 }

@@ -28,8 +28,10 @@ public class Application {
    * Runs the application.
    */
   public void run() {
-    String text = readFile().toString();
-    populateRegistry(text);
+    String textFromFile = readFile().toString();
+    populateRegistry(textFromFile);
+    String textToFile = registryToText(boatClub.getMembers());
+    writeFile(textToFile);
   }
 
   /**
@@ -56,7 +58,6 @@ public class Application {
     String[] members = text.split("MEMBER:");
     ArrayList<String> memberlist = new ArrayList<>(Arrays.asList(members));
     memberlist.remove(0);
-    ArrayList<Member> allNewMembers = new ArrayList<>(); // OBS
     for (int i = 0; i < memberlist.size(); i++) {
       String[] memberInfo = memberlist.get(i).split("BOAT:");
 
@@ -74,13 +75,15 @@ public class Application {
       }
 
       boatClub.addMember(newMember);
-      allNewMembers.add(newMember); // OBS
     }
-
-    ArrayList<Member> membersCopy = boatClub.getMembers(); // OBS
-    System.out.println(allNewMembers); // OBS
   }
 
+  /**
+   * Creates a new member with the provided personal data.
+   *
+   * @param data Personal data (name, email address and id).
+   * @return A new member.
+   */
   private Member createMember(String[] data) {
     String name = data[0];
     String email = data[1];
@@ -95,6 +98,12 @@ public class Application {
     return newMember;
   }
 
+  /**
+   * Creates a new boat with the provided attributes.
+   *
+   * @param boat The attributes (name, type, length, depth and power).
+   * @return A new boat.
+   */
   private Boat createBoat(String[] boat) {
     Boat newBoat = null;
     String boatName = boat[0];
@@ -115,12 +124,27 @@ public class Application {
     return newBoat;
   }
 
+  private String registryToText(ArrayList<Member> members) {
+    StringBuilder text = new StringBuilder();
+    for (int i = 0; i < members.size(); i++) {
+      Member member = members.get(i);
+      text.append(member.toString() + "\n");
+
+      ArrayList<Boat> boats = member.getBoats();
+      for (int j = 0; j < boats.size(); j++) {
+        Boat boat = boats.get(j);
+        text.append(boat.toString() + "\n");
+      }
+    }
+    return text.toString();
+  }
+
   /**
    * Writes text to the registry file.
    *
    * @param text The text to write.
    */
-  private void writeFile(StringBuilder text) {
+  private void writeFile(String text) {
     try {
       PrintWriter printer = new PrintWriter(file, "utf-8");
       printer.print(text);

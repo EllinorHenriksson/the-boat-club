@@ -13,4 +13,14 @@ public class Canoe extends Boat {
   public Canoe(String name, int length) {
     super(name, length);
   }
+
+  /**
+   * Returns a string representation of the canoe.
+   *
+   * @return A string.
+   */
+  @Override
+  public String toString() {
+    return "BOAT:" + this.getName() + ":" + "canoe" + ":" + this.getLength();
+  }
 }

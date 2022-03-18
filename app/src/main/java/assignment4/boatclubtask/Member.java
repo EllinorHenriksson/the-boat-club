@@ -137,4 +137,17 @@ public class Member {
       }
     }
   }
+
+  /**
+   * Returns a string representation of the member.
+   *
+   * @return A string.
+   */
+  public String toString() {
+    if (email == null) {
+      return "MEMBER:" + name + ":" + ":" + id;
+    } else {
+      return "MEMBER:" + name + ":" + email + ":" + id;
+    }
+  }
 }

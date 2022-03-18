@@ -61,17 +61,8 @@ public class Application {
       String[] memberInfo = memberlist.get(i).split("BOAT:");
 
       String[] personalData = memberInfo[0].split(":");
-      String name = personalData[0];
-      String email = personalData[1];
-      String id = personalData[2];
-
-      Member newMember = null;
-      if (email.equals("")) {
-        newMember = new Member(name, id);
-      } else {
-        newMember = new Member(name, email, id);
-      }
-
+      Member newMember = createMember(personalData);
+      
       ArrayList<String[]> boats = new ArrayList<>();
       for (int j = 1; j < memberInfo.length; j++) {
         boats.add(memberInfo[j].split(":"));
@@ -88,6 +79,20 @@ public class Application {
 
     ArrayList<Member> membersCopy = boatClub.getMembers(); // OBS
     System.out.println(allNewMembers); // OBS
+  }
+
+  private Member createMember(String[] data) {
+    String name = data[0];
+    String email = data[1];
+    String id = data[2];
+
+    Member newMember = null;
+    if (email.equals("")) {
+      newMember = new Member(name, id);
+    } else {
+      newMember = new Member(name, email, id);
+    }
+    return newMember;
   }
 
   private Boat createBoat(String[] boat) {

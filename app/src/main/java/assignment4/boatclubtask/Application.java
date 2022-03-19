@@ -85,7 +85,7 @@ public class Application {
   }
 
   /**
-   * Handles the main menu actions forwarded from the console ui. 
+   * Handles the "main menu" actions forwarded from the console ui. 
    */
   private void handleMainMenu() {
     int choiceMainMenu = console.mainMenu(); 
@@ -100,44 +100,12 @@ public class Application {
       handleMemberList();
     }
 
-    /*
     // If "Select member"...
     if (choiceMainMenu == 3) {
-      int choiceMemberInfo = console.memberInfo(); 
-      // If "Edit member"...
-      if (choiceMemberInfo == 1) {
-        // Edit member
-      }
-      // If "Delete member"...
-      if (choiceMemberInfo == 2) {
-        // Delete member
-      }
-      // If "Add boat"...
-      if (choiceMemberInfo == 3) {
-        // Add boat
-      }
-      // If "Select boat"...
-      if (choiceMemberInfo == 4) {
-        int choiceBoatInfo = console.boatInfo();
-        // If "Edit boat"...
-        if (choiceBoatInfo == 1) {
-          // Edit boat
-        }
-        // If "Deletet boat"...
-        if (choiceBoatInfo == 2) {
-          // Delete boat
-        }
-        // If "Exit to main meny"...
-        if (choiceBoatInfo == 3) {
-          // Exit to main meny
-        }
-      }
-      // If "Exit to main meny"...
-      if (choiceMemberInfo == 5) {
-        // Exit to main meny
-      }
+      handleSelectMember();
     }
 
+    /*
     // If "Search"...
     if (choiceMainMenu == 4) {
       // Search for members
@@ -151,32 +119,118 @@ public class Application {
   }
 
   /**
-   * Handles the create member action forwarded from the ui.
+   * Handles the "create member" action forwarded from the console ui.
    */
   private void handleCreateMember() {
     String[] data = console.createMember();
+    if (!data[1].equals("")) {
+      if (!uniqueEmail(data[1])) {
+        // OBS! Meddela användaren att mailadressen är upptagen
+        System.out.println("Email must be unique."); // OBS! Kom ihåg att ändra
+      }
+    }
+
     String id = null;
     Boolean unique = false;
     while (!unique) {
       id = generateId();
-      unique = isUnique(id);
+      unique = uniqueId(id);
     }
     data[2] = id;
+
     Member newMember = createMember(data);
     registry.addMember(newMember);
     handleMainMenu();
   }
 
   /**
-   * Handles the member list action forwarded from the console ui.
+   * Handles the "member list" actions forwarded from the console ui.
    */
   private void handleMemberList() {
     // OBS! Fortsätt här! Fundera på hur göra med meny val.
     String choice = null;
-    choice = console.memberList();
+    choice = console.memberList(registry.getMembers());
     if (choice != null) {
       handleMainMenu();
     }
+  }
+
+  /**
+   * Handles the "select member" actions forwarded fron the console ui.
+   */
+  private void handleSelectMember() {
+    String id = console.selectMember();
+    Member member = null;
+    for (Member m : registry.getMembers()) {
+      if (m.getId().equals(id)) {
+        member = m;
+      }
+    }
+    handleMemberInfo(member);
+  }
+
+  /**
+   * Handles the member actions forwarded fron the console ui.
+   *
+   * @param member The current member.
+   */
+  private void handleMemberInfo(Member member) {
+    int choice = console.memberInfo(member); 
+  
+    // If "Edit member"...
+    if (choice == 1) {
+      String[] data = console.editMember(member);
+      member.setName(data[0]);
+      member.setEmail(data[1]);
+      handleMainMenu();
+    }
+    /*
+    // If "Delete member"...
+    if (choice == 2) {
+      // Delete member
+    }
+    // If "Add boat"...
+    if (choice == 3) {
+      // Add boat
+    }
+    // If "Select boat"...
+    if (choice == 4) {
+      int choiceBoatInfo = console.boatInfo();
+      // If "Edit boat"...
+      if (choiceBoatInfo == 1) {
+        // Edit boat
+      }
+      // If "Deletet boat"...
+      if (choiceBoatInfo == 2) {
+        // Delete boat
+      }
+      // If "Exit to main meny"...
+      if (choiceBoatInfo == 3) {
+        // Exit to main meny
+      }
+    }
+    // If "Exit to main meny"...
+    if (choice == 5) {
+      // Exit to main meny
+    }
+    */
+  }
+
+  /**
+   * Checks if the email is unique among the members.
+   *
+   * @param email The email.
+   * @return True if unique, else false.
+   */
+  private boolean uniqueEmail(String email) {
+    for (Member m : registry.getMembers()) {
+      if (m.getEmail() != null) {
+        if (m.getEmail().equals(email)) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   /**
@@ -195,10 +249,9 @@ public class Application {
    * @param id The id.
    * @return True if unique, else false.
    */
-  private Boolean isUnique(String id) {
-    ArrayList<Member> members = registry.getMembers();
-    for (Member member : members) {
-      if (member.getId().equals(id)) {
+  private Boolean uniqueId(String id) {
+    for (Member m : registry.getMembers()) {
+      if (m.getId().equals(id)) {
         return false;
       }
     }
@@ -272,12 +325,12 @@ public class Application {
     StringBuilder text = new StringBuilder();
     for (int i = 0; i < members.size(); i++) {
       Member member = members.get(i);
-      text.append(member.toString() + "\n");
+      text.append(member + "\n");
 
       ArrayList<Boat> boats = member.getBoats();
       for (int j = 0; j < boats.size(); j++) {
         Boat boat = boats.get(j);
-        text.append(boat.toString() + "\n");
+        text.append(boat + "\n");
       }
     }
     return text.toString();

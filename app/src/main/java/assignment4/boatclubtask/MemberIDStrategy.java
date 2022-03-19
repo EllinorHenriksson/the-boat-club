@@ -2,7 +2,10 @@ package assignment4.boatclubtask;
 
 import java.util.ArrayList;
 
-public class MemberIDStrategy implements SearchStrategy {
+/**
+ * OBS! Ändra här.
+ */
+public class MemberIdStrategy implements SearchStrategy {
 
   @Override
   public ArrayList<Member> search(String phrase) {

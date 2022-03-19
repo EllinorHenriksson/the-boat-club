@@ -2,6 +2,9 @@ package assignment4.boatclubtask;
 
 import java.util.ArrayList;
 
+/**
+ * OBS! Ändra här.
+ */
 public class NoOfBoatsStrategy implements SearchStrategy {
 
   @Override

@@ -14,7 +14,7 @@ import java.util.UUID;
 public class Application {
   private File file;
   private Registry registry = new Registry();
-  private Console console = new Console();
+  private UiConsole console = new UiConsole();
 
   /**
    * Initializing constructor.
@@ -32,79 +32,7 @@ public class Application {
     String textFromFile = readFile().toString();
     populateRegistry(textFromFile);
 
-    String choiceMainMeny = console.mainMeny(); 
-    // If "Create member"...
-    if (choiceMainMeny.equals("1")) {
-      String[] data = console.newMember();
-      String id = null;
-      Boolean unique = false;
-      while (!unique) {
-        id = generateId();
-        unique = isUnique(id);
-      }
-      data[2] = id;
-      createMember(data);
-      // Exit to main meny
-    }
-
-    // If "List all members"...
-    if (choiceMainMeny.equals("2")) {
-      String choiceMemberList = console.memberList();
-      // If "Exit to main meny"...
-      if (choiceMemberList.equals("1")) {
-        // Exit to main meny
-      }
-    }
-
-    // If "Select member"...
-    if (choiceMainMeny.equals("3")) {
-      String choiceMemberInfo = console.memberInfo(); 
-      // If "Edit member"...
-      if (choiceMemberInfo.equals("1")) {
-        // Edit member
-      }
-      // If "Delete member"...
-      if (choiceMemberInfo.equals("2")) {
-        // Delete member
-      }
-      // If "Add boat"...
-      if (choiceMemberInfo.equals("3")) {
-        // Add boat
-      }
-      // If "Select boat"...
-      if (choiceMemberInfo.equals("4")) {
-        String choiceBoatInfo = console.boatInfo();
-        // If "Edit boat"...
-        if (choiceBoatInfo.equals("1")) {
-          // Edit boat
-        }
-        // If "Deletet boat"...
-        if (choiceBoatInfo.equals("2")) {
-          // Delete boat
-        }
-        // If "Exit to main meny"...
-        if (choiceBoatInfo.equals("3")) {
-          // Exit to main meny
-        }
-      }
-      // If "Exit to main meny"...
-      if (choiceMemberInfo.equals("5")) {
-        // Exit to main meny
-      }
-    }
-
-    // If "Search"...
-    if (choiceMainMeny.equals("4")) {
-      // Search for members
-    }
-
-    // If "Quit application"...
-    if (choiceMainMeny.equals("5")) {
-      // Quit application
-      String textToFile = registryToText(registry.getMembers());
-      writeFile(textToFile);
-      // Exit application
-    }
+    handleMainMenu();
   }
 
   /**
@@ -126,6 +54,11 @@ public class Application {
     return text;
   }
 
+  /**
+   * Populates the regitry with the members in the registry file.
+   *
+   * @param text The file text.
+   */
   private void populateRegistry(String text) {
     text = text.replace("\n", "");
     String[] members = text.split("MEMBER:");
@@ -148,6 +81,101 @@ public class Application {
       }
 
       registry.addMember(newMember);
+    }
+  }
+
+  /**
+   * Handles the main menu actions forwarded from the console ui. 
+   */
+  private void handleMainMenu() {
+    int choiceMainMenu = console.mainMenu(); 
+    
+    // If "Create member"...
+    if (choiceMainMenu == 1) {
+      handleCreateMember();
+    }
+
+    // If "List all members"...
+    if (choiceMainMenu == 2) {
+      handleMemberList();
+    }
+
+    /*
+    // If "Select member"...
+    if (choiceMainMenu == 3) {
+      int choiceMemberInfo = console.memberInfo(); 
+      // If "Edit member"...
+      if (choiceMemberInfo == 1) {
+        // Edit member
+      }
+      // If "Delete member"...
+      if (choiceMemberInfo == 2) {
+        // Delete member
+      }
+      // If "Add boat"...
+      if (choiceMemberInfo == 3) {
+        // Add boat
+      }
+      // If "Select boat"...
+      if (choiceMemberInfo == 4) {
+        int choiceBoatInfo = console.boatInfo();
+        // If "Edit boat"...
+        if (choiceBoatInfo == 1) {
+          // Edit boat
+        }
+        // If "Deletet boat"...
+        if (choiceBoatInfo == 2) {
+          // Delete boat
+        }
+        // If "Exit to main meny"...
+        if (choiceBoatInfo == 3) {
+          // Exit to main meny
+        }
+      }
+      // If "Exit to main meny"...
+      if (choiceMemberInfo == 5) {
+        // Exit to main meny
+      }
+    }
+
+    // If "Search"...
+    if (choiceMainMenu == 4) {
+      // Search for members
+    }
+    */
+
+    // If "Quit application"...
+    if (choiceMainMenu == 5) {
+      exit();
+    }
+  }
+
+  /**
+   * Handles the create member action forwarded from the ui.
+   */
+  private void handleCreateMember() {
+    String[] data = console.createMember();
+    String id = null;
+    Boolean unique = false;
+    while (!unique) {
+      id = generateId();
+      unique = isUnique(id);
+    }
+    data[2] = id;
+    Member newMember = createMember(data);
+    registry.addMember(newMember);
+    handleMainMenu();
+  }
+
+  /**
+   * Handles the member list action forwarded from the console ui.
+   */
+  private void handleMemberList() {
+    // OBS! Fortsätt här! Fundera på hur göra med meny val.
+    String choice = null;
+    choice = console.memberList();
+    if (choice != null) {
+      handleMainMenu();
     }
   }
 
@@ -222,6 +250,16 @@ public class Application {
       newBoat = new Motorsailer(boatName, length, depth, power);
     }
     return newBoat;
+  }
+
+  /**
+   * Writes the registry's members to the registry file and exits the application.
+   */
+  private void exit() {
+    String textToFile = registryToText(registry.getMembers());
+    writeFile(textToFile);
+    console.closeScanner();
+    System.exit(1);
   }
 
   /**

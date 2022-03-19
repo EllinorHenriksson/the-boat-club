@@ -72,6 +72,7 @@ public class Motorsailer extends Boat {
    */
   @Override
   public String toString() {
-    return "BOAT:" + this.getName() + ":" + "motorsailer" + ":" + this.getLength() + ":" + this.getDepth() + ":" + this.getPower();
+    return "BOAT:" + this.getName() + ":" + "motorsailer" + ":" + this.getLength()
+        + ":" + this.getDepth() + ":" + this.getPower();
   }
 }

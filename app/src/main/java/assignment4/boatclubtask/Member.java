@@ -70,7 +70,7 @@ public class Member {
    * Sets the email address of the member.
    *
    * @param email The email address (must not be null nor shorter than 2 characters,
-   * and must contain @, or an exception will be thrown).
+    and must contain @, or an exception will be thrown).
    */
   public void setEmail(String email) {
     if (email == null || email.length() < 5 || !email.contains("@")) {
@@ -109,7 +109,8 @@ public class Member {
         boatCopy = new Motorboat(boat.getName(), boat.getLength(), ((Motorboat) boat).getPower());
       }
       if (boat instanceof Motorsailer) {
-        boatCopy = new Motorsailer(boat.getName(), boat.getLength(), ((Motorsailer) boat).getDepth(), ((Motorsailer) boat).getPower());
+        boatCopy = new Motorsailer(boat.getName(), boat.getLength(),
+          ((Motorsailer) boat).getDepth(), ((Motorsailer) boat).getPower());
       }
       copy.add(boatCopy);
     }

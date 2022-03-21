@@ -7,6 +7,7 @@ import java.util.ArrayList;
  */
 public class Registry {
   ArrayList<Member> members = new ArrayList<>();
+  SearchStrategy searchStrategy = null;
 
   /**
    * Gets copies of the boat club's members.
@@ -120,5 +121,13 @@ public class Registry {
       }
     }
     return member;
+  }
+
+  public void setSearchStrategy(SearchStrategy strategy) {
+    searchStrategy = strategy;
+  }
+
+  public ArrayList<Member> searchForMembers(String phrase) {
+    return searchStrategy.search(getMembers(), phrase);
   }
 }

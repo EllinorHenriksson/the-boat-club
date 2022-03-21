@@ -40,8 +40,8 @@ public class UiConsole {
    *
    * @return User input to view the main menu.
    */
-  public String memberList(ArrayList<Member> members) {
-    System.out.println("\n--- List of members ---");
+  public String memberList(ArrayList<Member> members, String header) {
+    System.out.println(header);
     for (Member m : members) {
       String email = m.getEmail();
       if (email == null) {
@@ -49,7 +49,7 @@ public class UiConsole {
       }
       System.out.println(m.getName() + "\n\tEmail: " + email + "\n\tID: " + m.getId());
     }
-    System.out.println("Press Enter to go back to the main menu");
+    System.out.println("\nPress Enter to go back to the main menu");
     return scan.nextLine();
   }
 
@@ -97,7 +97,7 @@ public class UiConsole {
    */
   public String[] editMember() {
     String[] data = new String[2];
-    System.out.println("--- Edit member---\nEnter the new name: ");
+    System.out.println("\n--- Edit member---\nEnter the new name: ");
     data[0] = scan.nextLine();
     System.out.println("Enter the new email: ");
     data[1] = scan.nextLine();
@@ -111,7 +111,7 @@ public class UiConsole {
    */
   public Boat addBoat() {
     Boat boat = null;
-    System.out.println("--- Add boat ---\n1. Canoe\n2. Sailboat\n3. Motorboat\n4. Motorsailer"
+    System.out.println("\n--- Add boat ---\n1. Canoe\n2. Sailboat\n3. Motorboat\n4. Motorsailer"
         + "\nChoose type of boat (1-4): ");
     int choice = Integer.parseInt(scan.nextLine());
     System.out.println("Enter the name of the boat: ");
@@ -195,7 +195,7 @@ public class UiConsole {
    */
   public Boat editBoat() {
     Boat newBoat = null;
-    System.out.println("--- Edit boat ---\nChoose type (1 = canoe; 2 = sailboat; 3 = motorboat; 4 = motorsailer): ");
+    System.out.println("\n--- Edit boat ---\nChoose type (1 = canoe; 2 = sailboat; 3 = motorboat; 4 = motorsailer): ");
     int type = Integer.parseInt(scan.nextLine());
     System.out.println("Enter the new name: ");
     String name = scan.nextLine();
@@ -220,6 +220,27 @@ public class UiConsole {
       newBoat = new Motorsailer(name, length, depth, power);
     }
     return newBoat;
+  }
+
+  /**
+   * Lets the user choose search strategy and enter a search phrase.
+   *
+   * @return The entered data.
+   */
+  public String[] searchForMembers() {
+    String[] data = new String[2];
+    System.out.println("\n--- Search for members ---\n1. By member ID\n2. By member name" 
+        + "\n3. By boat type\nChoose a search strategy (1-3): ");
+    data[0] = scan.nextLine();
+    if (data[0].equals("1")) {
+      System.out.println("Enter the ID: ");
+    } else if (data[0].equals("2")) {
+      System.out.println("Enter the name: ");
+    } else if (data[0].equals("3")) {
+      System.out.println("Enter the type (canoe/sailboat/motorboat/motorsailer): ");
+    }
+    data[1] = scan.nextLine();
+    return data;
   }
 
   /**

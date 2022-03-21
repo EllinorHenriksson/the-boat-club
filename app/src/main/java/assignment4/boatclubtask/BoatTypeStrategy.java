@@ -3,14 +3,41 @@ package assignment4.boatclubtask;
 import java.util.ArrayList;
 
 /**
- * OBS! Ändra här.
+ * Represents a strategy for searching for members with a specific boat type.
  */
 public class BoatTypeStrategy implements SearchStrategy {
 
+  /**
+   * Searches for members in a registry.
+   *
+   * @param members The members to search among.
+   * @param phrase The search phrase.
+   * @return The search results.
+   */
   @Override
-  public ArrayList<Member> search(String phrase) {
-    // TODO Auto-generated method stub
-    return null;
+  public ArrayList<Member> search(ArrayList<Member> members, String phrase) {
+    ArrayList<Member> results = new ArrayList<>();
+    for (Member m : members) {
+      Boolean match = false;
+      for (Boat b : m.getBoats()) {
+        if (phrase.equals("canoe") && b instanceof Canoe) {
+          match = true;
+        }
+        if (phrase.equals("sailboat") && b instanceof Sailboat) {
+          match = true;
+        }
+        if (phrase.equals("motorboat") && b instanceof Motorboat) {
+          match = true;
+        }
+        if (phrase.equals("motorsailer") && b instanceof Motorsailer) {
+          match = true;
+        }
+      }
+      if (match) {
+        results.add(m);
+      }
+    }
+    return results;
   }
   
 }

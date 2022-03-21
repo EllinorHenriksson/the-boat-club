@@ -3,8 +3,6 @@ package assignment4.boatclubtask;
 import java.io.File;
 import java.io.PrintWriter;
 import java.lang.StringBuilder;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -99,7 +97,7 @@ public class Application {
 
     // If "List all members"...
     if (choiceMainMenu == 2) {
-      handleMemberList();
+      handleMemberList(registry.getMembers(), "\n--- List of members ---");
     }
 
     // If "Select member"...
@@ -107,12 +105,10 @@ public class Application {
       handleSelectMember();
     }
 
-    /*
     // If "Search"...
     if (choiceMainMenu == 4) {
-      // Search for members
+      handleSearch();
     }
-    */
 
     // If "Quit application"...
     if (choiceMainMenu == 5) {
@@ -148,8 +144,8 @@ public class Application {
   /**
    * Handles the "member list" actions forwarded from the console ui.
    */
-  private void handleMemberList() {
-    console.memberList(registry.getMembers());
+  private void handleMemberList(ArrayList<Member> members, String header) {
+    console.memberList(members, header);
     handleMainMenu();
   }
 
@@ -165,6 +161,26 @@ public class Application {
       }
     }
     handleMemberInfo(member);
+  }
+
+  /**
+   * Handles the "search for members" actions forwarded fron the console ui.
+   */
+  private void handleSearch() {
+    String[] data = console.searchForMembers();
+    int choice = Integer.parseInt(data[0]);
+    String phrase = data[1];
+
+    if (choice == 1) {
+      registry.setSearchStrategy(new MemberIdStrategy()); 
+    } else if (choice == 2) {
+      registry.setSearchStrategy(new MemberNameStrategy());
+    } else if (choice == 3) {
+      registry.setSearchStrategy(new BoatTypeStrategy());
+    }
+
+    ArrayList<Member> results = registry.searchForMembers(phrase);
+    handleMemberList(results, "\n--- Search results ---");
   }
 
   /**

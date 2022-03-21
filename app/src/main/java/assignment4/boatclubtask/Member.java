@@ -129,11 +129,9 @@ public class Member {
   /**
    * Deletes a boat with a certain name from the member.
    *
-   * @param boat The boat to be deleted.
+   * @param name The name of the boat to be deleted.
    */
-  public void deleteBoat(Boat boat) {
-    String name = boat.getName();
-
+  public void deleteBoat(String name) {
     for (int i = 0; i < boats.size(); i++) {
       if (boats.get(i).getName().equals(name)) {
         boats.remove(i);

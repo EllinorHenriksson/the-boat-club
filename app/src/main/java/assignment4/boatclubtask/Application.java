@@ -168,7 +168,7 @@ public class Application {
   }
 
   /**
-   * Handles the member actions forwarded fron the console ui.
+   * Handles the member actions forwarded from the console ui.
    *
    * @param member The current member.
    */
@@ -207,6 +207,11 @@ public class Application {
     }
   }
 
+  /**
+   * Handles the "select boat" actions forwarded fron the console ui.
+   *
+   * @param member The current member.
+   */
   private void handleSelectBoat(Member member) {
     String name = console.selectBoat();
     Boat boat = null;
@@ -215,23 +220,30 @@ public class Application {
         boat = b;
       }
     }
-    handleBoatInfo(member, boat);
+    handleBoatInfo(member.getId(), boat);
   }
 
-  private void handleBoatInfo(Member member, Boat boat) {
+  /**
+   * Handles the boat actions forwarded from the console ui.
+   *
+   * @param id The id of the member that owns the boat.
+   * @param boat The current boat.
+   */
+  private void handleBoatInfo(String id, Boat boat) {
     int choice = console.boatInfo(boat);
     // If "Edit boat"...
     if (choice == 1) {
-      Boat newBoat = console.editBoat(boat);
-      registry.editBoat(member, boat, newBoat);
+      Boat newBoat = console.editBoat();
+      registry.editBoat(id, boat.getName(), newBoat);
       handleMainMenu();
     }
-    /*
+    
     // If "Deletet boat"...
     if (choice == 2) {
-      // Delete boat
+      registry.deleteBoatFromMember(id, boat.getName());
+      handleMainMenu();
     }
-    */
+    
     // If "Go back to main meny"...
     if (choice == 3) {
       handleMainMenu();

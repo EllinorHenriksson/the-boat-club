@@ -75,9 +75,15 @@ public class UiConsole {
     System.out.println("Email: " + member.getEmail());
     System.out.println("ID: " + member.getId());
     System.out.println("Boats: ");
-    for (Boat b : member.getBoats()) {
-      System.out.println("\t" + b.getName());
+    ArrayList<Boat> boats = member.getBoats();
+    if (boats.size() > 0) {
+      for (Boat b : boats) {
+        System.out.println("\t" + b.getName());
+      }
+    } else {
+      System.out.println("\t-");
     }
+    
     String menu = "\n--- Member meny ---\n1. Edit member\n2. Delete member\n3. Add boat\n" 
         + "4. Select boat\n5. Go back to main meny\nWhat would you like to do? (1-5)";
     System.out.println(menu);
@@ -185,10 +191,9 @@ public class UiConsole {
   /**
    * Lets the user edit the current boat.
 
-   * @param boat The boat to edit.
    * @return The edited (new) boat. 
    */
-  public Boat editBoat(Boat boat) {
+  public Boat editBoat() {
     Boat newBoat = null;
     System.out.println("--- Edit boat ---\nChoose type (1 = canoe; 2 = sailboat; 3 = motorboat; 4 = motorsailer): ");
     int type = Integer.parseInt(scan.nextLine());

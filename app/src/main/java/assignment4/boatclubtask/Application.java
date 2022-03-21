@@ -3,6 +3,8 @@ package assignment4.boatclubtask;
 import java.io.File;
 import java.io.PrintWriter;
 import java.lang.StringBuilder;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -147,12 +149,8 @@ public class Application {
    * Handles the "member list" actions forwarded from the console ui.
    */
   private void handleMemberList() {
-    // OBS! Fortsätt här! Fundera på hur göra med meny val.
-    String choice = null;
-    choice = console.memberList(registry.getMembers());
-    if (choice != null) {
-      handleMainMenu();
-    }
+    console.memberList(registry.getMembers());
+    handleMainMenu();
   }
 
   /**
@@ -175,45 +173,69 @@ public class Application {
    * @param member The current member.
    */
   private void handleMemberInfo(Member member) {
+    String id = member.getId();
     int choice = console.memberInfo(member); 
   
     // If "Edit member"...
     if (choice == 1) {
-      String[] data = console.editMember(member);
-      member.setName(data[0]);
-      member.setEmail(data[1]);
+      String[] data = console.editMember();
+      registry.editMember(id, data[0], data[1]);
+      handleMainMenu();
+    }
+    
+    // If "Delete member"...
+    if (choice == 2) {
+      registry.deleteMember(id);
+      handleMainMenu();
+    }
+    
+    // If "Add boat"...
+    if (choice == 3) {
+      Boat boat = console.addBoat();
+      registry.addBoatToMember(id, boat);
+      handleMainMenu();
+    }
+    
+    // If "Select boat"...
+    if (choice == 4) {
+      handleSelectBoat(member);
+    }
+    
+    // If "Go back to main meny"...
+    if (choice == 5) {
+      handleMainMenu();
+    }
+  }
+
+  private void handleSelectBoat(Member member) {
+    String name = console.selectBoat();
+    Boat boat = null;
+    for (Boat b : member.getBoats()) {
+      if (b.getName().equals(name)) {
+        boat = b;
+      }
+    }
+    handleBoatInfo(member, boat);
+  }
+
+  private void handleBoatInfo(Member member, Boat boat) {
+    int choice = console.boatInfo(boat);
+    // If "Edit boat"...
+    if (choice == 1) {
+      Boat newBoat = console.editBoat(boat);
+      registry.editBoat(member, boat, newBoat);
       handleMainMenu();
     }
     /*
-    // If "Delete member"...
+    // If "Deletet boat"...
     if (choice == 2) {
-      // Delete member
-    }
-    // If "Add boat"...
-    if (choice == 3) {
-      // Add boat
-    }
-    // If "Select boat"...
-    if (choice == 4) {
-      int choiceBoatInfo = console.boatInfo();
-      // If "Edit boat"...
-      if (choiceBoatInfo == 1) {
-        // Edit boat
-      }
-      // If "Deletet boat"...
-      if (choiceBoatInfo == 2) {
-        // Delete boat
-      }
-      // If "Exit to main meny"...
-      if (choiceBoatInfo == 3) {
-        // Exit to main meny
-      }
-    }
-    // If "Exit to main meny"...
-    if (choice == 5) {
-      // Exit to main meny
+      // Delete boat
     }
     */
+    // If "Go back to main meny"...
+    if (choice == 3) {
+      handleMainMenu();
+    }
   }
 
   /**
@@ -312,7 +334,7 @@ public class Application {
     String textToFile = registryToText(registry.getMembers());
     writeFile(textToFile);
     console.closeScanner();
-    System.exit(1);
+    System.exit(0);
   }
 
   /**

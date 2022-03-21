@@ -73,4 +73,36 @@ public class Registry {
       }
     }
   }
+
+  /**
+   * Adds a boat to a member.
+   *
+   * @param id The id of the member.
+   * @param boat The boat.
+   */
+  public void addBoatToMember(String id, Boat boat) {
+    for (Member member : members) {
+      if (member.getId().equals(id)) {
+        member.addBoat(boat);
+      }
+    }
+  }
+
+  /**
+   * Edits a boat (i.e. deletes an old bot and adds a new in its place).
+   *
+   * @param member A copy of the member that owns the boat.
+   * @param oldBoat A copy of the boat that is edited (i.e. removed).
+   * @param newBoat The edited (i.e. new) boat.
+   */
+  public void editBoat(Member member, Boat oldBoat, Boat newBoat) {
+    String id = member.getId();
+
+    for (Member m : members) {
+      if (m.getId().equals(id)) {
+        m.deleteBoat(oldBoat);
+        m.addBoat(newBoat);
+      }
+    }
+  }
 }

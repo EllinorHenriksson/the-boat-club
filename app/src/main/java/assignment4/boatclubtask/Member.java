@@ -129,9 +129,11 @@ public class Member {
   /**
    * Deletes a boat with a certain name from the member.
    *
-   * @param name The name of the boat.
+   * @param boat The boat to be deleted.
    */
-  public void deleteBoat(String name) {
+  public void deleteBoat(Boat boat) {
+    String name = boat.getName();
+
     for (int i = 0; i < boats.size(); i++) {
       if (boats.get(i).getName().equals(name)) {
         boats.remove(i);
@@ -140,9 +142,9 @@ public class Member {
   }
 
   /**
-   * Returns a string representation of the member.
+   * Returns a string representation of the member fit for the registry file.
    *
-   * @return A string.
+   * @return The string.
    */
   public String toString() {
     if (email == null) {

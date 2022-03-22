@@ -3,12 +3,12 @@ package assignment4.boatclubtask;
 import java.util.ArrayList;
 
 /**
- * Represents a strategy for searching for members with a specific name.
+ * Represents a strategy for searching for members with boats over a specific length.
  */
-public class MemberNameStrategy implements SearchStrategy {
+public class BoatLengthStrategy implements SearchStrategy {
   private String phrase;
 
-  public MemberNameStrategy(String phrase) {
+  public BoatLengthStrategy(String phrase) {
     this.phrase = phrase;
   }
 
@@ -20,9 +20,16 @@ public class MemberNameStrategy implements SearchStrategy {
    */
   @Override
   public ArrayList<Member> search(ArrayList<Member> members) {
+    int length = Integer.parseInt(phrase);
     ArrayList<Member> results = new ArrayList<>();
     for (Member m : members) {
-      if (m.getName().equals(phrase)) {
+      Boolean match = false;
+      for (Boat b : m.getBoats()) {
+        if (b.getLength() >= length) {
+          match = true;
+        }
+      }
+      if (match) {
         results.add(m);
       }
     }

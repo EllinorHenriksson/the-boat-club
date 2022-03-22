@@ -230,7 +230,7 @@ public class UiConsole {
   public String[] searchForMembers() {
     String[] data = new String[2];
     System.out.println("\n--- Search for members ---\n1. By member ID\n2. By member name" 
-        + "\n3. By boat type\nChoose a search strategy (1-3): ");
+        + "\n3. By boat type\n4. By minimum boat length\nChoose a search strategy (1-4): ");
     data[0] = scan.nextLine();
     if (data[0].equals("1")) {
       System.out.println("Enter the ID: ");
@@ -238,6 +238,8 @@ public class UiConsole {
       System.out.println("Enter the name: ");
     } else if (data[0].equals("3")) {
       System.out.println("Enter the type (canoe/sailboat/motorboat/motorsailer): ");
+    } else if (data[0].equals("4")) {
+      System.out.println("Enter the length (in meter): ");
     }
     data[1] = scan.nextLine();
     return data;

@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public class Registry {
   ArrayList<Member> members = new ArrayList<>();
-  SearchStrategy searchStrategy = null;
+  SearchStrategy searchTool = null;
 
   /**
    * Gets copies of the boat club's members.
@@ -124,10 +124,23 @@ public class Registry {
   }
 
   public void setSearchStrategy(SearchStrategy strategy) {
-    searchStrategy = strategy;
+    searchTool = strategy;
   }
 
-  public ArrayList<Member> searchForMembers(String phrase) {
-    return searchStrategy.search(getMembers(), phrase);
+  public ArrayList<Member> searchForMembers() {
+    return searchTool.search(getMembers());
+  }
+
+  public void implementSearchComposite() {
+    ArrayList<Member> members = getMembers();
+    SearchStrategy component1 = new BoatTypeStrategy("sailboat");
+    SearchStrategy component2 = new BoatLengthStrategy("20");
+
+    SearchStrategy component3 = new BoatTypeStrategy("motorsailer");
+    SearchStrategy component4 = new SearchComposite("AND", component1, component2);
+
+    searchTool = new SearchComposite("OR", component3, component4);
+    ArrayList<Member> result = searchTool.search(members);
+    System.out.println(result);
   }
 }

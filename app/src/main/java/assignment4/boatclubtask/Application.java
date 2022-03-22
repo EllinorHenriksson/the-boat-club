@@ -172,15 +172,18 @@ public class Application {
     String phrase = data[1];
 
     if (choice == 1) {
-      registry.setSearchStrategy(new MemberIdStrategy()); 
+      registry.setSearchStrategy(new MemberIdStrategy(phrase)); 
     } else if (choice == 2) {
-      registry.setSearchStrategy(new MemberNameStrategy());
+      registry.setSearchStrategy(new MemberNameStrategy(phrase));
     } else if (choice == 3) {
-      registry.setSearchStrategy(new BoatTypeStrategy());
+      registry.setSearchStrategy(new BoatTypeStrategy(phrase));
+    } else if (choice == 4) {
+      registry.setSearchStrategy(new BoatLengthStrategy(phrase));
     }
 
-    ArrayList<Member> results = registry.searchForMembers(phrase);
+    ArrayList<Member> results = registry.searchForMembers();
     handleMemberList(results, "\n--- Search results ---");
+    registry.implementSearchComposite();
   }
 
   /**

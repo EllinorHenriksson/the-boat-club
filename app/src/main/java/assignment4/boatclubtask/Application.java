@@ -183,7 +183,6 @@ public class Application {
 
     ArrayList<Member> results = registry.searchForMembers();
     handleMemberList(results, "\n--- Search results ---");
-    registry.implementSearchComposite();
   }
 
   /**
@@ -335,24 +334,24 @@ public class Application {
   /**
    * Creates a new boat with the provided attributes.
    *
-   * @param boat The attributes (name, type, length, depth and power).
+   * @param data Boat data (name, type, length, depth and power).
    * @return A new boat.
    */
-  private Boat createBoat(String[] boat) {
+  private Boat createBoat(String[] data) {
     Boat newBoat = null;
-    String boatName = boat[0];
-    int length = Integer.parseInt(boat[2]);
-    if (boat[1].equals("canoe")) {
+    String boatName = data[0];
+    int length = Integer.parseInt(data[2]);
+    if (data[1].equals("canoe")) {
       newBoat = new Canoe(boatName, length);
-    } else if (boat[1].equals("sailboat")) {
-      int depth = Integer.parseInt(boat[3]);
+    } else if (data[1].equals("sailboat")) {
+      int depth = Integer.parseInt(data[3]);
       newBoat = new Sailboat(boatName, length, depth);
-    } else if (boat[1].equals("motorboat")) {
-      int power = Integer.parseInt(boat[3]);
+    } else if (data[1].equals("motorboat")) {
+      int power = Integer.parseInt(data[3]);
       newBoat = new Motorboat(boatName, length, power);
-    } else if (boat[1].equals("motorsailer")) {
-      int depth = Integer.parseInt(boat[3]);
-      int power = Integer.parseInt(boat[4]);
+    } else if (data[1].equals("motorsailer")) {
+      int depth = Integer.parseInt(data[3]);
+      int power = Integer.parseInt(data[4]);
       newBoat = new Motorsailer(boatName, length, depth, power);
     }
     return newBoat;

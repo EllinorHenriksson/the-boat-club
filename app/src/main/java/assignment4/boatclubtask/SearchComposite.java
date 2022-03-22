@@ -2,16 +2,31 @@ package assignment4.boatclubtask;
 
 import java.util.ArrayList;
 
+/**
+ * Represents a SearchStrategy composite.
+ */
 public class SearchComposite implements SearchStrategy {
-  String operator;
+  private String operator;
   private ArrayList<SearchStrategy> children = new ArrayList<>();
 
+  /**
+   * Initializing constructor.
+   *
+   * @param operator The binary operator.
+   * @param component1 The first component.
+   * @param component2 The second component.
+   */
   public SearchComposite(String operator, SearchStrategy component1, SearchStrategy component2) {
     setOperator(operator);
     children.add(component1);
     children.add(component2);
   }
 
+  /**
+   * Sets the logical operator.
+   *
+   * @param operator The operator (must be "AND" or "OR", or an exception will be thrown).
+   */
   public void setOperator(String operator) {
     if (operator.equals("AND") || operator.equals("OR")) {
       this.operator = operator;

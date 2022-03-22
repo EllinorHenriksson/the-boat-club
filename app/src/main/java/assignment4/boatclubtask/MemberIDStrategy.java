@@ -8,6 +8,11 @@ import java.util.ArrayList;
 public class MemberIdStrategy implements SearchStrategy {
   private String phrase;
 
+  /**
+   * Initializing constructor.
+   *
+   * @param phrase The search phrase (i.e. the ID).
+   */
   public MemberIdStrategy(String phrase) {
     this.phrase = phrase;
   }

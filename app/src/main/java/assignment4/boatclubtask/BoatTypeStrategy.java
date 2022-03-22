@@ -8,6 +8,11 @@ import java.util.ArrayList;
 public class BoatTypeStrategy implements SearchStrategy {
   private String phrase;
 
+  /**
+   * Initializing constructor.
+   *
+   * @param phrase The search phrase (i.e. the type).
+   */
   public BoatTypeStrategy(String phrase) {
     this.phrase = phrase;
   }

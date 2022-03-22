@@ -123,14 +123,27 @@ public class Registry {
     return member;
   }
 
+  /**
+   * Sets the search strategy of the registry.
+   *
+   * @param strategy The search strartegy.
+   */
   public void setSearchStrategy(SearchStrategy strategy) {
     searchTool = strategy;
   }
 
+  /**
+   * Searches for members in the registry.
+   *
+   * @return The search result.
+   */
   public ArrayList<Member> searchForMembers() {
     return searchTool.search(getMembers());
   }
 
+  /**
+   * Example of implementation of binary search functionality with the composite design pattern.
+   */
   public void implementSearchComposite() {
     ArrayList<Member> members = getMembers();
     SearchStrategy component1 = new BoatTypeStrategy("sailboat");

@@ -51,7 +51,7 @@ public class Member {
    */
   public void setName(String name) {
     if (name == null || name.length() < 2) {
-      throw new IllegalArgumentException("Invalid member name.");
+      throw new IllegalArgumentException("Invalid member name, must be at least 2 characters long.");
     } else {
       this.name = name;
     }

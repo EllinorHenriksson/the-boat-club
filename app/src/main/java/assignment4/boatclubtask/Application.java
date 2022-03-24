@@ -26,12 +26,29 @@ public class Application {
   }
 
   /**
+   * The main method of the program.
+   */
+  public static void main(String[] args) {
+    Application app = null;
+    try {
+      String currentPath = System.getProperty("user.dir");
+      String registryPath = currentPath + File.separator + "data" + File.separator + "registry.data";
+      File file = new File(registryPath);
+      app = new Application(file);
+      app.run();
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    } finally {
+      app.exit();
+    }
+  }
+
+  /**
    * Runs the application.
    */
   public void run() {
     String textFromFile = readFile().toString();
     populateRegistry(textFromFile);
-
     handleMainMenu();
   }
 
@@ -50,6 +67,7 @@ public class Application {
       scan.close();
     } catch (Exception e) {
       e.printStackTrace();
+      System.exit(1);
     }
     return text;
   }
@@ -120,24 +138,26 @@ public class Application {
    * Handles the "create member" action forwarded from the console ui.
    */
   private void handleCreateMember() {
-    String[] data = console.createMember();
-    if (!data[1].equals("")) {
-      if (!uniqueEmail(data[1])) {
-        // OBS! Meddela användaren att mailadressen är upptagen
-        System.out.println("Email must be unique."); // OBS! Kom ihåg att ändra
+    try {
+      String[] data = console.createMember();
+      if (!data[1].equals("")) {
+        if (!uniqueEmail(data[1])) {
+          throw new RuntimeException("Email must be unique. This address is already used by another member.");
+        }
       }
-    }
 
-    String id = null;
-    Boolean unique = false;
-    while (!unique) {
-      id = generateId();
-      unique = uniqueId(id);
+      String id = null;
+      Boolean unique = false;
+      while (!unique) {
+        id = generateId();
+        unique = uniqueId(id);
+      }
+      data[2] = id;
+      Member newMember = createMember(data);
+      registry.addMember(newMember);
+    } catch (RuntimeException e) {
+      System.out.println("Failed to create member: " + e.getMessage());
     }
-    data[2] = id;
-
-    Member newMember = createMember(data);
-    registry.addMember(newMember);
     handleMainMenu();
   }
 
@@ -155,19 +175,35 @@ public class Application {
   private void handleSelectMember() {
     String id = console.selectMember();
     Member member = null;
-    for (Member m : registry.getMembers()) {
-      if (m.getId().equals(id)) {
-        member = m;
+    try {
+      for (Member m : registry.getMembers()) {
+        if (m.getId().equals(id)) {
+          member = m;
+        }
       }
+      if (member == null) {
+        throw new Exception("No member with the entered id was found.");
+      }
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+      handleMainMenu();
     }
+    
     handleMemberInfo(member);
   }
 
   /**
-   * Handles the "search for members" actions forwarded fron the console ui.
+   * Handles the "search for members" actions forwarded from the console ui.
    */
   private void handleSearch() {
-    String[] data = console.searchForMembers();
+    String[] data = null;
+    try {
+      data = console.searchForMembers();
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+      handleMainMenu();
+    }
+
     int choice = Integer.parseInt(data[0]);
     String phrase = data[1];
 
@@ -197,32 +233,45 @@ public class Application {
     // If "Edit member"...
     if (choice == 1) {
       String[] data = console.editMember();
-      registry.editMember(id, data[0], data[1]);
-      handleMainMenu();
+      try {
+        if (!data[1].equals(member.getEmail())) {
+          if (!uniqueEmail(data[1])) {
+            throw new RuntimeException("Email must be unique. This address is already used by another member.");
+          }
+        }
+        registry.editMember(id, data[0], data[1]);
+      } catch (RuntimeException e) {
+        System.out.println("Failed to edit member: " + e.getMessage());
+      }
     }
     
     // If "Delete member"...
     if (choice == 2) {
       registry.deleteMember(id);
-      handleMainMenu();
     }
     
     // If "Add boat"...
     if (choice == 3) {
-      Boat boat = console.addBoat();
-      registry.addBoatToMember(id, boat);
-      handleMainMenu();
+      try {
+        Boat boat = console.createBoat("\n--- Add boat ---");
+        registry.addBoatToMember(id, boat);
+      } catch (IllegalArgumentException e) {
+        System.out.println("Failed to create boat: " + e.getMessage());
+      } catch (Exception e) {
+        System.out.println(e.getMessage());
+      }
     }
     
     // If "Select boat"...
     if (choice == 4) {
-      handleSelectBoat(member);
+      try {
+        handleSelectBoat(member);
+      } catch (Exception e) {
+        System.out.println(e.getMessage());
+      }
     }
     
-    // If "Go back to main meny"...
-    if (choice == 5) {
-      handleMainMenu();
-    }
+    handleMainMenu();
   }
 
   /**
@@ -230,13 +279,16 @@ public class Application {
    *
    * @param member The current member.
    */
-  private void handleSelectBoat(Member member) {
+  private void handleSelectBoat(Member member) throws Exception {
     String name = console.selectBoat();
     Boat boat = null;
     for (Boat b : member.getBoats()) {
       if (b.getName().equals(name)) {
         boat = b;
       }
+    }
+    if (boat == null) {
+      throw new Exception("No boat with the entered name was found.");
     }
     handleBoatInfo(member.getId(), boat);
   }
@@ -251,20 +303,20 @@ public class Application {
     int choice = console.boatInfo(boat);
     // If "Edit boat"...
     if (choice == 1) {
-      Boat newBoat = console.editBoat();
-      registry.editBoat(id, boat.getName(), newBoat);
-      handleMainMenu();
+      Boat newBoat = null;
+      try {
+        newBoat = console.createBoat("\n--- Edit boat ---");
+        registry.editBoat(id, boat.getName(), newBoat);
+      } catch (IllegalArgumentException e) {
+        System.out.println("Failed to edit boat: " + e.getMessage());
+      } catch (Exception e) {
+        System.out.println(e.getMessage());
+      }
     }
     
     // If "Deletet boat"...
     if (choice == 2) {
       registry.deleteBoatFromMember(id, boat.getName());
-      handleMainMenu();
-    }
-    
-    // If "Go back to main meny"...
-    if (choice == 3) {
-      handleMainMenu();
     }
   }
 
@@ -328,6 +380,7 @@ public class Application {
     } else {
       newMember = new Member(name, email, id);
     }
+    
     return newMember;
   }
 
@@ -401,16 +454,5 @@ public class Application {
     } catch (Exception e) {
       e.printStackTrace();
     }
-  }
-
-  /**
-   * The main method of the program.
-   */
-  public static void main(String[] args) {
-    String currentPath = System.getProperty("user.dir");
-    String registryPath = currentPath + File.separator + "data" + File.separator + "registry.data";
-    File file = new File(registryPath);
-    Application application = new Application(file);
-    application.run();
   }
 }

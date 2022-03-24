@@ -55,7 +55,7 @@ public class Motorsailer extends Boat {
   /**
    * Sets the horse power of the motorsailer.
    *
-   * @param power The horse power.
+   * @param power The horse power (must be greater than 0 or an exception will be thrown).
    */
   public void setPower(int power) {
     if (power > 0) {

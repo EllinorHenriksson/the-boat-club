@@ -15,10 +15,20 @@ public class UiConsole {
    * @return The menu choice of the user.
    */
   public int mainMenu() {
-    String menu = "\n--- Main meny ---\n1. Create new member\n2. List all members\n3. Select member\n" 
-        + "4. Search for members\n5. Quit application\nWhat would you like to do? (1-5) ";
-    System.out.println(menu);
-    return Integer.parseInt(scan.nextLine());
+    do {
+      try {
+        String menu = "\n--- Main meny ---\n1. Create new member\n2. List all members\n3. Select member\n" 
+            + "4. Search for members\n5. Quit application\nWhat would you like to do? (1-5) ";
+        System.out.println(menu);
+        int choice = Integer.parseInt(scan.nextLine());
+        if (choice < 1 || choice > 5) {
+          throw new Exception("The entered value must be 1-5.");
+        }
+        return choice;
+      } catch (Exception e) {
+        System.out.println(e.getMessage());
+      }
+    } while (true);
   }
 
   /**
@@ -105,15 +115,18 @@ public class UiConsole {
   }
 
   /**
-   * Lets the user add a boat for the current member.
+   * Lets the user add or edit a boat for the current member (by creating a new boat).
    *
    * @return The boat.
    */
-  public Boat addBoat() {
+  public Boat createBoat(String header) throws Exception {
     Boat boat = null;
-    System.out.println("\n--- Add boat ---\n1. Canoe\n2. Sailboat\n3. Motorboat\n4. Motorsailer"
+    System.out.println(header + "\n1. Canoe\n2. Sailboat\n3. Motorboat\n4. Motorsailer"
         + "\nChoose type of boat (1-4): ");
     int choice = Integer.parseInt(scan.nextLine());
+    if (choice < 1 || choice > 4) {
+      throw new Exception("The entered value must be 1-4.");
+    }
     System.out.println("Enter the name of the boat: ");
     String name = scan.nextLine();
     System.out.println("Enter the length (in meter): ");
@@ -189,49 +202,18 @@ public class UiConsole {
   }
 
   /**
-   * Lets the user edit the current boat.
-
-   * @return The edited (new) boat. 
-   */
-  public Boat editBoat() {
-    Boat newBoat = null;
-    System.out.println("\n--- Edit boat ---\nChoose type (1 = canoe; 2 = sailboat; 3 = motorboat; 4 = motorsailer): ");
-    int type = Integer.parseInt(scan.nextLine());
-    System.out.println("Enter the new name: ");
-    String name = scan.nextLine();
-    System.out.println("Enter the new length (in meter): ");
-    int length = Integer.parseInt(scan.nextLine());
-
-    if (type == 1) {
-      newBoat = new Canoe(name, length);
-    } else if (type == 2) {
-      System.out.println("Enter the new depth (in meter): ");
-      int depth = Integer.parseInt(scan.nextLine());
-      newBoat = new Sailboat(name, length, depth);
-    } else if (type == 3) {
-      System.out.println("Enter the new engine power (in horse powers): ");
-      int power = Integer.parseInt(scan.nextLine());
-      newBoat = new Motorboat(name, length, power);
-    } else if (type == 4) {
-      System.out.println("Enter the new depth (in meter): ");
-      int depth = Integer.parseInt(scan.nextLine());
-      System.out.println("Enter the new engine power (in horse powers): ");
-      int power = Integer.parseInt(scan.nextLine());
-      newBoat = new Motorsailer(name, length, depth, power);
-    }
-    return newBoat;
-  }
-
-  /**
    * Lets the user choose search strategy and enter a search phrase.
    *
    * @return The entered data.
    */
-  public String[] searchForMembers() {
+  public String[] searchForMembers() throws Exception {
     String[] data = new String[2];
     System.out.println("\n--- Search for members ---\n1. By member ID\n2. By member name" 
         + "\n3. By boat type\n4. By minimum boat length\nChoose a search strategy (1-4): ");
     data[0] = scan.nextLine();
+    if (Integer.parseInt(data[0]) < 1 || Integer.parseInt(data[0]) > 4) {
+      throw new Exception("The entered value must be 1-4.");
+    }
     if (data[0].equals("1")) {
       System.out.println("Enter the ID: ");
     } else if (data[0].equals("2")) {

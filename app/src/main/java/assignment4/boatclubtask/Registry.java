@@ -117,7 +117,7 @@ public class Registry {
     Member member = null;
     for (Member m : members) {
       if (m.getId().equals(id)) {
-        member = m;
+        member = new Member(m.getName(), m.getEmail(), m.getId());
       }
     }
     return member;

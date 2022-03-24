@@ -145,15 +145,19 @@ public class Registry {
    * Example of implementation of binary search functionality with the composite design pattern.
    */
   public void implementSearchComposite() {
-    ArrayList<Member> members = getMembers();
-    SearchStrategy component1 = new BoatTypeStrategy("sailboat");
-    SearchStrategy component2 = new BoatLengthStrategy("20");
+    try {
+      ArrayList<Member> members = getMembers();
+      SearchStrategy component1 = new BoatTypeStrategy("sailboat");
+      SearchStrategy component2 = new BoatLengthStrategy("20");
 
-    SearchStrategy component3 = new BoatTypeStrategy("motorsailer");
-    SearchStrategy component4 = new SearchComposite("AND", component1, component2);
+      SearchStrategy component3 = new BoatTypeStrategy("motorsailer");
+      SearchStrategy component4 = new SearchComposite("AND", component1, component2);
 
-    searchTool = new SearchComposite("OR", component3, component4);
-    ArrayList<Member> result = searchTool.search(members);
-    System.out.println(result);
+      searchTool = new SearchComposite("OR", component3, component4);
+      ArrayList<Member> result = searchTool.search(members);
+      System.out.println(result);
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
+    }
   }
 }

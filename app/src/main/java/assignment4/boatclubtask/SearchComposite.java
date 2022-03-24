@@ -31,7 +31,7 @@ public class SearchComposite implements SearchStrategy {
     if (operator.equals("AND") || operator.equals("OR")) {
       this.operator = operator;
     } else {
-      // Felmeddelande
+      throw new IllegalArgumentException("The operator must be 'AND' or 'OR'.");
     }
   }
 

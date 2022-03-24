@@ -1,6 +1,7 @@
 package assignment4.boatclubtask;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.StringBuilder;
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class Application {
     Application app = null;
     try {
       String currentPath = System.getProperty("user.dir");
-      String registryPath = currentPath + File.separator + "data" + File.separator + "registry.data";
+      String registryPath = currentPath + File.separator + "dataTest" + File.separator + "registry.data";
       File file = new File(registryPath);
       app = new Application(file);
       app.run();
@@ -47,9 +48,13 @@ public class Application {
    * Runs the application.
    */
   public void run() {
-    String textFromFile = readFile().toString();
-    populateRegistry(textFromFile);
-    handleMainMenu();
+    try {
+      String textFromFile = readFile().toString();
+      populateRegistry(textFromFile);
+      handleMainMenu();
+    } catch (IOException e) {
+      System.out.println(e.getMessage());;
+    }
   }
 
   /**
@@ -57,18 +62,13 @@ public class Application {
    *
    * @return {StringBuilder} The text content of the file.
    */
-  private StringBuilder readFile() {
+  private StringBuilder readFile() throws IOException {
     StringBuilder text = new StringBuilder();
-    try {
-      Scanner scan = new Scanner(file, "utf-8");
-      while (scan.hasNext()) {
-        text.append(scan.nextLine() + "\n");
-      }
-      scan.close();
-    } catch (Exception e) {
-      e.printStackTrace();
-      System.exit(1);
+    Scanner scan = new Scanner(file, "utf-8");
+    while (scan.hasNext()) {
+      text.append(scan.nextLine() + "\n");
     }
+    scan.close();
     return text;
   }
 
@@ -142,7 +142,7 @@ public class Application {
       String[] data = console.createMember();
       if (!data[1].equals("")) {
         if (!uniqueEmail(data[1])) {
-          throw new RuntimeException("Email must be unique. This address is already used by another member.");
+          throw new Exception("Email must be unique. This address is already used by another member.");
         }
       }
 
@@ -155,8 +155,10 @@ public class Application {
       data[2] = id;
       Member newMember = createMember(data);
       registry.addMember(newMember);
-    } catch (RuntimeException e) {
+    } catch (IllegalArgumentException e) {
       System.out.println("Failed to create member: " + e.getMessage());
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
     }
     handleMainMenu();
   }
@@ -173,9 +175,9 @@ public class Application {
    * Handles the "select member" actions forwarded fron the console ui.
    */
   private void handleSelectMember() {
-    String id = console.selectMember();
-    Member member = null;
     try {
+      String id = console.selectMember();
+      Member member = null;
       for (Member m : registry.getMembers()) {
         if (m.getId().equals(id)) {
           member = m;
@@ -184,41 +186,37 @@ public class Application {
       if (member == null) {
         throw new Exception("No member with the entered id was found.");
       }
+      handleMemberInfo(member);
     } catch (Exception e) {
       System.out.println(e.getMessage());
       handleMainMenu();
     }
-    
-    handleMemberInfo(member);
   }
 
   /**
    * Handles the "search for members" actions forwarded from the console ui.
    */
   private void handleSearch() {
-    String[] data = null;
     try {
-      data = console.searchForMembers();
+      String[] data = console.searchForMembers();
+      int choice = Integer.parseInt(data[0]);
+      String phrase = data[1];
+      if (choice == 1) {
+        registry.setSearchStrategy(new MemberIdStrategy(phrase)); 
+      } else if (choice == 2) {
+        registry.setSearchStrategy(new MemberNameStrategy(phrase));
+      } else if (choice == 3) {
+        registry.setSearchStrategy(new BoatTypeStrategy(phrase));
+      } else if (choice == 4) {
+        registry.setSearchStrategy(new BoatLengthStrategy(phrase));
+      }
+  
+      ArrayList<Member> results = registry.searchForMembers();
+      handleMemberList(results, "\n--- Search results ---");
     } catch (Exception e) {
       System.out.println(e.getMessage());
       handleMainMenu();
     }
-
-    int choice = Integer.parseInt(data[0]);
-    String phrase = data[1];
-
-    if (choice == 1) {
-      registry.setSearchStrategy(new MemberIdStrategy(phrase)); 
-    } else if (choice == 2) {
-      registry.setSearchStrategy(new MemberNameStrategy(phrase));
-    } else if (choice == 3) {
-      registry.setSearchStrategy(new BoatTypeStrategy(phrase));
-    } else if (choice == 4) {
-      registry.setSearchStrategy(new BoatLengthStrategy(phrase));
-    }
-
-    ArrayList<Member> results = registry.searchForMembers();
-    handleMemberList(results, "\n--- Search results ---");
   }
 
   /**
@@ -236,11 +234,11 @@ public class Application {
       try {
         if (!data[1].equals(member.getEmail())) {
           if (!uniqueEmail(data[1])) {
-            throw new RuntimeException("Email must be unique. This address is already used by another member.");
+            throw new Exception("Email must be unique. This address is already used by another member.");
           }
         }
         registry.editMember(id, data[0], data[1]);
-      } catch (RuntimeException e) {
+      } catch (Exception e) {
         System.out.println("Failed to edit member: " + e.getMessage());
       }
     }

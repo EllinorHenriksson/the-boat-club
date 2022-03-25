@@ -28,3 +28,16 @@ The results of the build process will be shown to you, and you can dig deeper by
 
 ## Adding existing code
 If you have already worked on the task in whole or part using your own gradle setup we reccomend that you copy only the source code files into this structure. Your source code should be copied into the `app/src/main/java/` folder and you can change the `application` `mainClass` in `build.gradle` accordingly.
+
+## Student's notes
+### Code quality
+There is a lot of code in Application and UIConsole, and it might have been possible to divide that code further into more classes. It's hard to get an overview of the code since the files are so long. I also had a hard time naming the methods in these two classes. Because these two classes communicate a lot with eachother, many methods have similar names. For example, UIConsole has a method called createMember, which the method handleCreateMember in Application is calling, then processing its return value. The return value is an array of data about the member that should be created. This is done by the method createMember in Application (i.e. the same method name as in UIConsole). I'm not sure if this similarity of method names makes it clearer that they belong together, or if it makes the code more confusing.
+
+### Composite pattern
+A method to try out the implementation of the composite pattern is provided in Registry, called implementSearchComposite.
+
+### JUnit tests
+I've looked over the methods in my code but I have a hard time finding methods that would be suitable to test. Most methods are void, or dependent on other objects that I don't create within the method which gets too complicated to recreate for each test case. For example if I would like to test the method uniqueEmail in Application, the method uses a Register object, which attribute "members" has been populated with Member objects. Many methods are also dependent on iput from the user which will not be possible to simulate in a test case. I would have liked too implement more tests, but I have trouble finding any suitable methods other than simple getters and setters.
+
+## Class diagram
+![Class diagram](./class-diagram.jpg)

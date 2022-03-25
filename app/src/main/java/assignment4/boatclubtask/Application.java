@@ -33,7 +33,7 @@ public class Application {
     Application app = null;
     try {
       String currentPath = System.getProperty("user.dir");
-      String registryPath = currentPath + File.separator + "dataTest" + File.separator + "registry.data";
+      String registryPath = currentPath + File.separator + "data" + File.separator + "registry.data";
       File file = new File(registryPath);
       app = new Application(file);
       app.run();

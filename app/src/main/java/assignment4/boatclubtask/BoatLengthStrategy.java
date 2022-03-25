@@ -6,15 +6,28 @@ import java.util.ArrayList;
  * Represents a strategy for searching for members with boats over a specific length.
  */
 public class BoatLengthStrategy implements SearchStrategy {
-  private String phrase;
+  private int length;
 
   /**
    * Initializing constructor.
    *
-   * @param phrase The search phrase (i.e. the length).
+   * @param phrase The search phrase (i.e. the boat length).
    */
   public BoatLengthStrategy(String phrase) {
-    this.phrase = phrase;
+    setLength(Integer.parseInt(phrase));
+  }
+
+  /**
+   * Sets the search phrase.
+   *
+   * @param length The search phrase (i.e. the boat length) (must be graeter than 0 or an exception will be thrown).
+   */
+  private void setLength(int length) {
+    if (length > 0) {
+      this.length = length;
+    } else {
+      throw new IllegalArgumentException("Length must be greater than 0.");
+    }
   }
 
   /**
@@ -25,7 +38,6 @@ public class BoatLengthStrategy implements SearchStrategy {
    */
   @Override
   public ArrayList<Member> search(ArrayList<Member> members) {
-    int length = Integer.parseInt(phrase);
     ArrayList<Member> results = new ArrayList<>();
     for (Member m : members) {
       Boolean match = false;

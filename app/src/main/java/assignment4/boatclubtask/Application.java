@@ -202,7 +202,7 @@ public class Application {
       int choice = Integer.parseInt(data[0]);
       String phrase = data[1];
       if (choice == 1) {
-        registry.setSearchStrategy(new MemberIdStrategy(phrase)); 
+        registry.setSearchStrategy(new IdentificationStrategy(phrase)); 
       } else if (choice == 2) {
         registry.setSearchStrategy(new MemberNameStrategy(phrase));
       } else if (choice == 3) {

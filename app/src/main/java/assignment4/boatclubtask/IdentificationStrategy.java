@@ -3,9 +3,9 @@ package assignment4.boatclubtask;
 import java.util.ArrayList;
 
 /**
- * Represents a strategy for searching for members with a specific member ID.
+ * Represents a strategy for searching for members with a specific ID.
  */
-public class MemberIdStrategy implements SearchStrategy {
+public class IdentificationStrategy implements SearchStrategy {
   private String phrase;
 
   /**
@@ -13,7 +13,7 @@ public class MemberIdStrategy implements SearchStrategy {
    *
    * @param phrase The search phrase (i.e. the ID).
    */
-  public MemberIdStrategy(String phrase) {
+  public IdentificationStrategy(String phrase) {
     this.phrase = phrase;
   }
 
@@ -33,5 +33,4 @@ public class MemberIdStrategy implements SearchStrategy {
     }
     return results;
   }
-  
 }
